@@ -243,6 +243,572 @@
         .top-result-name { color: #fff; flex: 1; }
         .top-result-percent { color: #ffd700; font-weight: bold; }
 
+        /* Name Input Styles */
+        .name-input-container {
+            margin: 25px 0;
+        }
+
+        .name-input-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .name-input-wrapper {
+            position: relative;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .name-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .name-input:focus {
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .name-input-saved {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .name-input-saved.visible {
+            opacity: 1;
+        }
+
+        /* Greeting Styles */
+        .greeting {
+            color: #ffd700;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .quiz-greeting {
+            color: #ffd700;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .result-greeting {
+            color: #ffd700;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        /* AI Explanation Section */
+        .ai-explanation-section {
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .ai-explanation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .ai-explanation-title {
+            color: #e94560;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .ai-sparkle {
+            font-size: 1.2rem;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        .ai-explanation-content {
+            background: rgba(233, 69, 96, 0.1);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            min-height: 80px;
+        }
+
+        .ai-explanation-content.loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #e94560;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ai-explanation-text {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .ai-explanation-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Action Buttons Container */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .action-btn.reset-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .action-btn.reset-btn:hover {
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .action-btn.retake-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            color: #1a1a2e;
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .confirm-modal {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .confirm-modal {
+            transform: scale(1);
+        }
+
+        .confirm-modal h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .confirm-modal p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .confirm-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn.yes {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .confirm-btn.no {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Floating Action Button (Chat FAB) */
+        .chat-fab {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4);
+            transition: all 0.3s ease;
+            z-index: 999;
+            border: none;
+        }
+
+        .chat-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(233, 69, 96, 0.5);
+        }
+
+        .chat-fab.pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4); }
+            50% { box-shadow: 0 4px 30px rgba(233, 69, 96, 0.7); }
+        }
+
+        .chat-fab-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ffd700;
+            color: #1a1a2e;
+            font-size: 0.7rem;
+            font-weight: bold;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-fab-badge.visible {
+            opacity: 1;
+        }
+
+        /* Chat Modal */
+        .chat-modal {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 350px;
+            max-width: calc(100vw - 50px);
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.98) 0%, rgba(22, 33, 62, 0.98) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .chat-modal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+        }
+
+        .chat-modal.minimized {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.3) 0%, rgba(255, 107, 107, 0.3) 100%);
+            padding: 15px 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .chat-title {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .chat-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+        }
+
+        .chat-header-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-header-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .chat-header-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .chat-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .chat-message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: messageIn 0.3s ease;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.assistant {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.9);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-message.system {
+            align-self: center;
+            background: rgba(255, 215, 0, 0.1);
+            color: rgba(255, 215, 0, 0.8);
+            font-size: 0.85rem;
+            text-align: center;
+            border-radius: 12px;
+            padding: 8px 16px;
+        }
+
+        .chat-input-container {
+            padding: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .chat-input:focus {
+            border-color: #e94560;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .chat-send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .chat-typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 12px 16px;
+            align-self: flex-start;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: typingBounce 1.4s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-8px); }
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 25px;
@@ -270,6 +836,26 @@
             .character-grid small {
                 font-size: 0.5rem;
             }
+
+            .chat-modal {
+                width: calc(100vw - 30px);
+                right: 15px;
+                bottom: 90px;
+            }
+
+            .chat-fab {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -283,6 +869,25 @@
         <div class="welcome-screen" id="welcomeScreen">
             <h1>Which SAMS Character Are You?</h1>
             <p class="subtitle">Discover your inner animatronic from The Sun and Moon Show!</p>
+
+            <!-- Name Input Section -->
+            <div class="name-input-container">
+                <label class="name-input-label" for="usernameInput">Enter your name to personalize your experience:</label>
+                <div class="name-input-wrapper">
+                    <input
+                        type="text"
+                        id="usernameInput"
+                        class="name-input"
+                        placeholder="Your name here..."
+                        maxlength="30"
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="name-input-saved" id="nameSavedIndicator">✓ Name saved!</div>
+            </div>
+
+            <div id="greetingDisplay" class="greeting" style="display: none;"></div>
+
             <div class="character-grid">
                 <div><span>☀️</span><small>Sun</small></div>
                 <div><span>🌙</span><small>Moon</small></div>
@@ -302,11 +907,23 @@
                 <div><span>➕</span><small>Pos Moon</small></div>
             </div>
             <p>Answer 20 fun questions about your personality, and we'll match you with the SAMS character that best represents your unique traits! From the cheerful Sun to the mysterious Old Moon, the nurturing Earth to the mischievous Jack-O-Moon — discover your true SAMS identity!</p>
-            <button class="btn" onclick="startQuiz()">Start Quiz ☀️</button>
+            <div id="welcomeButtons">
+                <button class="btn" onclick="startQuiz()">Start Quiz ☀️</button>
+            </div>
+            <div id="resumeSection" style="display: none; margin-top: 20px;">
+                <button class="btn" onclick="restoreQuiz()" style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);">Continue Quiz ▶️</button>
+            </div>
+            <div id="viewResultsSection" style="display: none; margin-top: 15px;">
+                <button class="btn" onclick="showSavedResults()" style="background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%); padding: 10px 30px; font-size: 1rem;">View Last Result 📊</button>
+            </div>
+            <div id="clearDataSection" style="display: none; margin-top: 15px;">
+                <button onclick="clearAllData(); location.reload();" style="background: transparent; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">Clear All Data 🗑️</button>
+            </div>
         </div>
 
         <!-- Quiz Screen -->
         <div class="quiz-screen" id="quizScreen">
+            <div id="quizGreeting" class="quiz-greeting" style="display: none;"></div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
@@ -316,10 +933,82 @@
 
         <!-- Result Screen -->
         <div class="result-screen" id="resultScreen">
+            <div id="resultGreeting" class="result-greeting" style="display: none;"></div>
             <h1>Your Result</h1>
+
+            <!-- AI Explanation Section -->
+            <div class="ai-explanation-section">
+                <div class="ai-explanation-header">
+                    <span class="ai-sparkle">✨</span>
+                    <span class="ai-explanation-title">AI Personality Analysis</span>
+                    <span class="ai-sparkle">✨</span>
+                </div>
+                <div class="ai-explanation-content" id="aiExplanationContent">
+                    <div class="ai-loading-spinner"></div>
+                </div>
+            </div>
+
             <div class="character-card" id="characterCard"></div>
+
+            <!-- Action Buttons (Share & Reset) -->
+            <div class="action-buttons">
+                <button class="action-btn" onclick="shareResult()" id="shareBtn">
+                    <span>📤</span> Share Result
+                </button>
+                <button class="action-btn reset-btn" onclick="showResetConfirm()">
+                    <span>🔄</span> Retake Quiz
+                </button>
+            </div>
             <div class="top-results" id="topResults"></div>
-            <button class="btn retake-btn" onclick="retakeQuiz()">Take Quiz Again 🔄</button>
+        </div>
+    </div>
+
+    <!-- Floating Action Button (Chat) -->
+    <button class="chat-fab pulse" id="chatFab" onclick="toggleChat()" aria-label="Open chat">
+        💬
+        <span class="chat-fab-badge" id="chatFabBadge">1</span>
+    </button>
+
+    <!-- Chat Modal -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar">☀️🌙</div>
+                <div>
+                    <div class="chat-title">SAMS Chat</div>
+                    <div class="chat-subtitle">Ask us anything!</div>
+                </div>
+            </div>
+            <div class="chat-header-buttons">
+                <button class="chat-header-btn" onclick="minimizeChat()" aria-label="Minimize">−</button>
+                <button class="chat-header-btn" onclick="closeChat()" aria-label="Close">✕</button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be loaded here -->
+        </div>
+        <div class="chat-input-container">
+            <input
+                type="text"
+                class="chat-input"
+                id="chatInput"
+                placeholder="Type a message..."
+                maxlength="500"
+                onkeypress="handleChatKeypress(event)"
+            >
+            <button class="chat-send-btn" onclick="sendChatMessage()" id="chatSendBtn">➤</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="confirm-modal">
+            <h3>🔄 Retake Quiz?</h3>
+            <p>This will clear your current quiz results and start fresh. Your name and chat history will be saved. Are you sure?</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn yes" onclick="confirmReset()">Yes, Start Over</button>
+                <button class="confirm-btn no" onclick="hideResetConfirm()">Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -641,12 +1330,269 @@
 
         let currentQuestion = 0;
         let scores = {};
+        let answers = [];
+
+        // ============================================
+        // LOCAL STORAGE PERSISTENCE LAYER
+        // ============================================
+
+        const STORAGE_KEYS = {
+            USERNAME: 'sams_username',
+            QUIZ_STATE: 'sams_quiz_state',
+            RESULTS: 'sams_results',
+            EXPLANATION: 'sams_explanation',
+            CHAT_HISTORY: 'sams_chat_history'
+        };
+
+        /**
+         * Save data to localStorage with error handling
+         * @param {string} key - Storage key
+         * @param {*} data - Data to store (will be JSON stringified)
+         * @returns {boolean} Success status
+         */
+        function saveToLocalStorage(key, data) {
+            try {
+                const serialized = JSON.stringify(data);
+                localStorage.setItem(key, serialized);
+                return true;
+            } catch (error) {
+                console.error('Failed to save to localStorage:', error);
+                return false;
+            }
+        }
+
+        /**
+         * Retrieve data from localStorage with error handling
+         * @param {string} key - Storage key
+         * @param {*} defaultValue - Default value if key doesn't exist
+         * @returns {*} Parsed data or default value
+         */
+        function getFromLocalStorage(key, defaultValue = null) {
+            try {
+                const item = localStorage.getItem(key);
+                return item !== null ? JSON.parse(item) : defaultValue;
+            } catch (error) {
+                console.error('Failed to read from localStorage:', error);
+                return defaultValue;
+            }
+        }
+
+        /**
+         * Save username
+         * @param {string} username - User's name
+         */
+        function saveUsername(username) {
+            saveToLocalStorage(STORAGE_KEYS.USERNAME, username);
+        }
+
+        /**
+         * Get saved username
+         * @returns {string|null} Saved username or null
+         */
+        function getUsername() {
+            return getFromLocalStorage(STORAGE_KEYS.USERNAME);
+        }
+
+        /**
+         * Save current quiz state (question index and answers)
+         * Automatically persists on each answer
+         */
+        function saveQuizState() {
+            const quizState = {
+                currentQuestion: currentQuestion,
+                answers: answers,
+                timestamp: new Date().toISOString()
+            };
+            saveToLocalStorage(STORAGE_KEYS.QUIZ_STATE, quizState);
+        }
+
+        /**
+         * Get saved quiz state
+         * @returns {Object|null} Quiz state or null
+         */
+        function getQuizState() {
+            return getFromLocalStorage(STORAGE_KEYS.QUIZ_STATE);
+        }
+
+        /**
+         * Save quiz results
+         * @param {string} character - Character key
+         * @param {Object} scores - Final scores object
+         */
+        function saveResults(character, scores) {
+            const results = {
+                character: character,
+                scores: scores,
+                timestamp: new Date().toISOString()
+            };
+            saveToLocalStorage(STORAGE_KEYS.RESULTS, results);
+        }
+
+        /**
+         * Get saved results
+         * @returns {Object|null} Results object or null
+         */
+        function getResults() {
+            return getFromLocalStorage(STORAGE_KEYS.RESULTS);
+        }
+
+        /**
+         * Save AI explanation
+         * @param {string} explanation - AI-generated explanation text
+         */
+        function saveExplanation(explanation) {
+            saveToLocalStorage(STORAGE_KEYS.EXPLANATION, explanation);
+        }
+
+        /**
+         * Get saved explanation
+         * @returns {string|null} Saved explanation or null
+         */
+        function getExplanation() {
+            return getFromLocalStorage(STORAGE_KEYS.EXPLANATION);
+        }
+
+        /**
+         * Add a message to chat history
+         * @param {string} role - 'user' or 'assistant'
+         * @param {string} content - Message content
+         */
+        function addChatMessage(role, content) {
+            const history = getChatHistory() || [];
+            history.push({
+                role: role,
+                content: content,
+                timestamp: new Date().toISOString()
+            });
+            saveToLocalStorage(STORAGE_KEYS.CHAT_HISTORY, history);
+        }
+
+        /**
+         * Get chat history
+         * @returns {Array|null} Chat history array or null
+         */
+        function getChatHistory() {
+            return getFromLocalStorage(STORAGE_KEYS.CHAT_HISTORY, []);
+        }
+
+        /**
+         * Clear all quiz-related data (state, answers, results, explanation)
+         * Preserves username and chat history
+         */
+        function clearQuizData() {
+            localStorage.removeItem(STORAGE_KEYS.QUIZ_STATE);
+            localStorage.removeItem(STORAGE_KEYS.RESULTS);
+            localStorage.removeItem(STORAGE_KEYS.EXPLANATION);
+        }
+
+        /**
+         * Clear ALL stored data including username and chat history
+         */
+        function clearAllData() {
+            Object.values(STORAGE_KEYS).forEach(key => {
+                localStorage.removeItem(key);
+            });
+        }
+
+        /**
+         * Get all stored data as a single object
+         * @returns {Object} All stored data
+         */
+        function getAllStoredData() {
+            return {
+                username: getUsername(),
+                quizState: getQuizState(),
+                results: getResults(),
+                explanation: getExplanation(),
+                chatHistory: getChatHistory()
+            };
+        }
+
+        /**
+         * Check if there's a saved quiz in progress
+         * @returns {boolean} True if quiz state exists
+         */
+        function hasSavedQuiz() {
+            return getQuizState() !== null;
+        }
+
+        /**
+         * Check if user has completed results
+         * @returns {boolean} True if results exist
+         */
+        function hasSavedResults() {
+            return getResults() !== null;
+        }
+
+        /**
+         * Restore quiz from saved state
+         */
+        function restoreQuiz() {
+            const savedState = getQuizState();
+            if (savedState) {
+                currentQuestion = savedState.currentQuestion;
+                answers = savedState.answers || [];
+
+                // Restore scores from saved answers
+                scores = {};
+                answers.forEach(answer => {
+                    Object.entries(answer.scores).forEach(([char, score]) => {
+                        scores[char] = (scores[char] || 0) + score;
+                    });
+                });
+
+                document.getElementById('welcomeScreen').style.display = 'none';
+                document.getElementById('quizScreen').style.display = 'block';
+
+                // Update greetings
+                updateGreetings();
+                showQuestion();
+            }
+        }
+
+        /**
+         * Show saved results
+         */
+        function showSavedResults() {
+            const savedResults = getResults();
+            if (savedResults) {
+                scores = savedResults.scores || {};
+                document.getElementById('welcomeScreen').style.display = 'none';
+                document.getElementById('quizScreen').style.display = 'none';
+                document.getElementById('resultScreen').style.display = 'block';
+
+                // Update greetings and load saved explanation
+                updateGreetings();
+                showResult();
+
+                // Load saved explanation if available
+                const savedExplanation = getExplanation();
+                if (savedExplanation) {
+                    displayExplanation(savedExplanation);
+                }
+            }
+        }
 
         function startQuiz() {
+            // Check if there's a saved quiz first
+            if (hasSavedQuiz()) {
+                const confirmed = confirm('You have a quiz in progress. Would you like to continue where you left off?');
+                if (confirmed) {
+                    restoreQuiz();
+                    return;
+                } else {
+                    clearQuizData();
+                }
+            }
+
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('quizScreen').style.display = 'block';
             scores = {};
             currentQuestion = 0;
+            answers = [];
+
+            // Update greetings for quiz screen
+            updateGreetings();
             showQuestion();
         }
 
@@ -670,11 +1616,21 @@
         }
 
         function selectOption(option) {
+            // Record the answer
+            answers.push({
+                questionIndex: currentQuestion,
+                selectedOption: option.text,
+                scores: option.scores
+            });
+
+            // Update scores
             Object.entries(option.scores).forEach(([char, score]) => {
                 scores[char] = (scores[char] || 0) + score;
             });
 
+            // Save state to localStorage
             currentQuestion++;
+            saveQuizState();
 
             if (currentQuestion < questions.length) {
                 showQuestion();
@@ -691,6 +1647,18 @@
             const topCharacter = sortedScores[0][0];
             const character = characters[topCharacter];
             const percentage = Math.round((sortedScores[0][1] / (questions.length * 3)) * 100);
+
+            // Save results to localStorage
+            saveResults(topCharacter, scores);
+
+            // Clear quiz state but keep results
+            localStorage.removeItem(STORAGE_KEYS.QUIZ_STATE);
+
+            // Update greetings with name
+            updateGreetings();
+
+            // Generate AI explanation
+            generateAIExplanation(topCharacter, percentage);
 
             document.getElementById('characterCard').innerHTML = `
                 <div class="character-emoji">${character.emoji}</div>
@@ -719,11 +1687,642 @@
         }
 
         function retakeQuiz() {
+            // Clear all quiz-related data for fresh start
+            clearQuizData();
+
             document.getElementById('resultScreen').style.display = 'none';
             document.getElementById('welcomeScreen').style.display = 'block';
             scores = {};
             currentQuestion = 0;
+            answers = [];
+
+            // Update greetings
+            updateGreetings();
         }
+
+        // ============================================
+        // INITIALIZATION - Runs on page load
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for saved data and update UI
+            const resumeSection = document.getElementById('resumeSection');
+            const viewResultsSection = document.getElementById('viewResultsSection');
+            const clearDataSection = document.getElementById('clearDataSection');
+
+            if (hasSavedQuiz()) {
+                resumeSection.style.display = 'block';
+                clearDataSection.style.display = 'block';
+            }
+
+            if (hasSavedResults()) {
+                viewResultsSection.style.display = 'block';
+                clearDataSection.style.display = 'block';
+            }
+
+            // Initialize name input
+            initializeNameInput();
+
+            // Update greetings with saved name
+            updateGreetings();
+
+            // Initialize chat
+            loadChatHistory();
+            updateChatBadge();
+
+            // Log stored data for debugging (optional)
+            console.log('SAMS Quiz - Stored Data:', getAllStoredData());
+        });
+
+        // ============================================
+        // NAME INPUT & GREETINGS
+        // ============================================
+
+        /**
+         * Initialize the name input field with saved value
+         */
+        function initializeNameInput() {
+            const nameInput = document.getElementById('usernameInput');
+            const savedName = getUsername();
+
+            if (savedName) {
+                nameInput.value = savedName;
+            }
+
+            // Save on blur (when leaving the field)
+            nameInput.addEventListener('blur', function() {
+                handleNameInput(this.value.trim());
+            });
+
+            // Save on Enter key
+            nameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    this.blur();
+                }
+            });
+
+            // Clear "saved" indicator on input
+            nameInput.addEventListener('input', function() {
+                const indicator = document.getElementById('nameSavedIndicator');
+                indicator.classList.remove('visible');
+            });
+        }
+
+        /**
+         * Handle name input and save to localStorage
+         * @param {string} name - The name to save
+         */
+        function handleNameInput(name) {
+            const indicator = document.getElementById('nameSavedIndicator');
+
+            if (name.length > 0) {
+                saveUsername(name);
+                updateGreetings();
+                indicator.classList.add('visible');
+
+                // Hide indicator after 2 seconds
+                setTimeout(() => {
+                    indicator.classList.remove('visible');
+                }, 2000);
+            }
+        }
+
+        /**
+         * Update all greeting displays with the user's name
+         */
+        function updateGreetings() {
+            const name = getUsername();
+
+            // Welcome screen greeting
+            const welcomeGreeting = document.getElementById('greetingDisplay');
+            if (name && welcomeGreeting) {
+                welcomeGreeting.textContent = `Hello, ${name}! 🌟`;
+                welcomeGreeting.style.display = 'block';
+            }
+
+            // Quiz screen greeting
+            const quizGreeting = document.getElementById('quizGreeting');
+            if (name && quizGreeting) {
+                quizGreeting.textContent = `Let's continue, ${name}! 🎯`;
+                quizGreeting.style.display = 'block';
+            }
+
+            // Result screen greeting
+            const resultGreeting = document.getElementById('resultGreeting');
+            if (name && resultGreeting) {
+                resultGreeting.textContent = `Here are your results, ${name}! 🎉`;
+                resultGreeting.style.display = 'block';
+            }
+        }
+
+        // ============================================
+        // AI EXPLANATION
+        // ============================================
+
+        /**
+         * Generate AI explanation for the character match
+         * @param {string} characterKey - The character key
+         * @param {number} percentage - Match percentage
+         */
+        function generateAIExplanation(characterKey, percentage) {
+            const contentDiv = document.getElementById('aiExplanationContent');
+            const character = characters[characterKey];
+
+            // Show loading state
+            contentDiv.innerHTML = '<div class="ai-loading-spinner"></div>';
+            contentDiv.classList.add('loading');
+
+            // Check if we have a saved explanation
+            const savedExplanation = getExplanation();
+            if (savedExplanation) {
+                displayExplanation(savedExplanation);
+                return;
+            }
+
+            // Simulate AI processing delay
+            setTimeout(() => {
+                const explanation = generateExplanationText(character, percentage);
+                saveExplanation(explanation);
+                displayExplanation(explanation);
+            }, 1500 + Math.random() * 1000); // 1.5-2.5 second delay
+        }
+
+        /**
+         * Generate explanation text based on character match
+         * @param {Object} character - Character data
+         * @param {number} percentage - Match percentage
+         * @returns {string} Generated explanation
+         */
+        function generateExplanationText(character, percentage) {
+            const explanations = {
+                sun: `Your answers reveal a natural warmth that radiates like sunshine! 🌅 You scored ${percentage}% because you consistently chose responses that show enthusiasm, responsibility, and a genuine desire to make others happy. Like Sun, you're the energy that lifts everyone's spirits — whether it's planning fun activities, cracking jokes to cheer someone up, or simply being the responsible one who keeps things running smoothly. Your optimism isn't just a trait; it's your superpower!`,
+                moon: `The night sky has clearly imprinted itself upon your soul. 🌙 With ${percentage}% alignment, you embody the calm, thoughtful presence that Moon represents. Your choices show someone who values quiet reflection, strategic thinking, and personal space. You're the person others rely on when things get chaotic — the steady hand that handles the difficult tasks with grace and dry humor. Like Moon, you balance the light and dark within yourself, making you uniquely equipped to handle life's complexities.`,
+                lunar: `Your innocent heart and pure spirit shine through every answer. 💜 At ${percentage}% match, you share Lunar's sweet, curious nature. You approach the world with wonder rather than cynicism, always seeing the good in others. Your choices reveal someone who values emotional connection, kindness above all else, and believes in the power of love. Like Lunar, you're the heart that brings everyone together — the gentle reminder that innocence isn't weakness, but a beautiful strength all its own.`,
+                eclipse: `${percentage}% match reveals your beautiful complexity! 🌗 You, like Eclipse, embody perfect balance — light and dark, action and contemplation, all woven into one fascinating person. Your answers show someone who struggles productively with inner conflicts, using that tension to become wiser. You're searching for harmony between your different sides, and that journey makes you incredibly insightful. Like Eclipse, you help others find balance too.`,
+                earth: `Your nurturing energy is undeniable! 🌍 With ${percentage}% alignment, you embody Earth's motherly wisdom. Your choices consistently show someone who protects, guides, and creates safe spaces for others. You're the stabilizing force — the one everyone turns to when things get rough. Your patience is extraordinary, and your guidance has helped others grow even when you didn't realize it. Like Earth, you're the glue that keeps everything together.`,
+                solarFlare: `Your fierce loyalty burns bright! 🔥 ${percentage}% match with Solar Flare means you're a force to be reckoned with. Your answers reveal someone intensely protective — the kind who would face any danger for loved ones. You have a strong sense of justice and won't back down from a fight when it matters. That fire in you? It's not aggression — it's love in its most powerful form. Channel it wisely, and like Solar Flare, you're unstoppable.`,
+                ruIN: `Your ${percentage}% match with Ruin reveals profound depth. 💀 There's complexity beneath your surface that others might not see at first. Like Ruin, you may have been through experiences that changed you — scars that tell a story. But here's what matters: you're still here, still writing your own story. Your choices show someone searching for understanding and redemption. Never let your past define your future — you're so much more than your hardships.`,
+                foxy: `Your loyal heart and adventurous spirit are unmistakable! 🦊 ${percentage}% alignment with Foxy means you're the friend everyone wants. Your answers show someone who brings fun and chaos wherever you go — but it's chaos with heart. Your loyalty runs deep; when it matters, you're THERE. Like Foxy, you might be a bit mischievous, but your devotion is pure gold. Adventure with friends? You're always first in line.`,
+                bloodmoon: `Your strategic mind is impressive! 🩸 At ${percentage}% match, you share Bloodmoon's calculating nature. You see patterns others miss — thinking several steps ahead. Whether for good or navigating complex situations, your depth of thinking is undeniable. Your answers reveal someone intense and powerful, never boring. Like Bloodmoon, you're complex and sometimes frightening, but that's what makes you so effective when it counts.`,
+                puppet: `Your observational skills are extraordinary! 🎭 ${percentage}% match with Puppet shows you're always thinking several moves ahead. You understand how situations unfold — the invisible strings that connect everything. Your answers reveal someone patient, intelligent, and influential without needing to be center stage. Like Puppet, you see what others miss and know exactly when to act. Your mind is your greatest asset.`,
+                oldMoon: `Your ${percentage}% match reveals profound wisdom. 🌘 Like Old Moon, you carry depth from experiences — perhaps even metaphorical "other dimensions" of life. You're mysterious, seeing things others miss. Some might find you ominous, but that's just because you understand the deeper currents. Your choices show someone experienced and philosophical. Like Old Moon, you've seen things that changed you forever — and that wisdom is invaluable.`,
+                monty: `Your confidence is absolutely legendary! 🐊 ${percentage}% alignment with Monty means you know your worth. Your answers show someone competitive, athletic, always ready to prove themselves. Sure, it might come across as arrogance sometimes — but beneath that tough exterior is someone who just wants recognition. You CAN show a softer side to those who earn your trust. Like Monty, you're proud, capable, and never back down from a challenge.`,
+                djMusicMan: `Your enthusiasm is absolutely infectious! 🎧 ${percentage}% match with DJ Music Man means you bring energy everywhere. Your choices reveal someone friendly, creative, and always ready to entertain. Despite any overwhelming presence, you're a gentle giant at heart — just want everyone to have a good time. Like DJ Music Man, you're the life of the party, the heartbeat of any gathering. The world needs your energy!`,
+                jackOMoon: `Your spooky-fun personality is delightful! 🎃 ${percentage}% alignment with Jack-O-Moon means you love thrills and surprises. You're playful with a twist — maybe a little creepy at first glance, but it's all in good fun underneath. Your choices show someone creative, mischievous, and always ready for a good scare (the fun kind). Like Jack-O-Moon, you bring Halloween energy year-round. Keep being your wonderfully weird self!`,
+                negativeMoon: `Your ${percentage}% match shows your pragmatic nature. ➖ Like Negative Moon, you tend to see things realistically — sometimes pessimistically, but that protects you. Your skepticism is a shield. The challenge? Balancing that valuable realism with hope and joy. Your choices reveal someone cautious, expecting the worst so you're never disappointed. That's smart, but don't let it prevent you from life's beauties.`,
+                positiveMoon: `Your optimism is absolutely inspiring! ➕ ${percentage}% match with Positive Moon means you always try to see the bright side. Your choices show someone hopeful and encouraging — the voice that says "we can do this" when others want to quit. That optimism isn't naive; it's strength. Like Positive Moon, you inspire others simply by believing. Your hope is a gift — keep sharing it.`
+            };
+
+            return explanations[characterKey] ||
+                `Your ${percentage}% match reveals your unique connection to ${character.name}! Your answers show someone who embodies their core traits: ${character.traits.slice(0, 3).join(', ')}. This character resonates with you because you share their fundamental approach to life.`;
+        }
+
+        /**
+         * Display the explanation with fade-in animation
+         * @param {string} explanation - The explanation text
+         */
+        function displayExplanation(explanation) {
+            const contentDiv = document.getElementById('aiExplanationContent');
+            contentDiv.classList.remove('loading');
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'ai-explanation-text';
+            textDiv.textContent = explanation;
+
+            contentDiv.innerHTML = '';
+            contentDiv.appendChild(textDiv);
+
+            // Trigger fade-in
+            requestAnimationFrame(() => {
+                textDiv.classList.add('visible');
+            });
+        }
+
+        // ============================================
+        // WEB SHARE API
+        // ============================================
+
+        /**
+         * Share quiz result using Web Share API or fallback
+         */
+        function shareResult() {
+            const name = getUsername() || 'Someone';
+            const savedResults = getResults();
+
+            if (!savedResults) {
+                alert('No results to share yet! Take the quiz first.');
+                return;
+            }
+
+            const character = characters[savedResults.character];
+            const percentage = Math.round((Object.values(savedResults.scores).reduce((a, b) => Math.max(a, b), 0) / (questions.length * 3)) * 100);
+
+            const shareText = `🌟 ${name} got ${character.name} (${character.title}) on the SAMS Personality Test!\n${percentage}% match! ☀️🌙\n\nWhich SAMS character are YOU?`;
+
+            const shareData = {
+                title: 'My SAMS Personality Result',
+                text: shareText,
+                url: window.location.href
+            };
+
+            // Use Web Share API if available
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .then(() => console.log('Shared successfully'))
+                    .catch((error) => {
+                        console.log('Share failed:', error);
+                        // Fallback to clipboard
+                        fallbackShare(shareText);
+                    });
+            } else {
+                // Fallback for browsers without Web Share API
+                fallbackShare(shareText);
+            }
+        }
+
+        /**
+         * Fallback share method using clipboard
+         * @param {string} text - Text to share
+         */
+        function fallbackShare(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        alert('Result copied to clipboard! 📋 Paste it anywhere to share.');
+                    })
+                    .catch(() => {
+                        // Final fallback - show in a modal/prompt
+                        prompt('Copy this result:', text);
+                    });
+            } else {
+                // Legacy fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('Result copied to clipboard! 📋 Paste it anywhere to share.');
+                } catch (err) {
+                    prompt('Copy this result:', text);
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        // ============================================
+        // RESET / CONFIRMATION MODAL
+        // ============================================
+
+        /**
+         * Show reset confirmation modal
+         */
+        function showResetConfirm() {
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        /**
+         * Hide reset confirmation modal
+         */
+        function hideResetConfirm() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        /**
+         * Confirm and execute reset
+         */
+        function confirmReset() {
+            hideResetConfirm();
+            retakeQuiz();
+        }
+
+        // Close modal on overlay click
+        document.getElementById('confirmModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideResetConfirm();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideResetConfirm();
+                closeChat();
+            }
+        });
+
+        // ============================================
+        // CHAT SYSTEM
+        // ============================================
+
+        let isChatOpen = false;
+        let isChatMinimized = false;
+
+        /**
+         * Toggle chat modal open/closed
+         */
+        function toggleChat() {
+            const modal = document.getElementById('chatModal');
+            const fab = document.getElementById('chatFab');
+
+            if (isChatOpen) {
+                closeChat();
+            } else {
+                modal.classList.add('active');
+                modal.classList.remove('minimized');
+                fab.classList.remove('pulse');
+                isChatOpen = true;
+                isChatMinimized = false;
+
+                // Focus input
+                setTimeout(() => {
+                    document.getElementById('chatInput').focus();
+                }, 300);
+            }
+        }
+
+        /**
+         * Close chat modal
+         */
+        function closeChat() {
+            const modal = document.getElementById('chatModal');
+            modal.classList.remove('active');
+            isChatOpen = false;
+        }
+
+        /**
+         * Minimize chat modal
+         */
+        function minimizeChat() {
+            const modal = document.getElementById('chatModal');
+            modal.classList.add('minimized');
+            isChatMinimized = true;
+            isChatOpen = false;
+        }
+
+        /**
+         * Handle Enter key in chat input
+         * @param {KeyboardEvent} event - Keyboard event
+         */
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        }
+
+        /**
+         * Send a chat message
+         */
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message to UI
+            addMessageToChat('user', message);
+
+            // Save to localStorage
+            addChatMessage('user', message);
+
+            // Clear input
+            input.value = '';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Generate response after delay
+            setTimeout(() => {
+                removeTypingIndicator();
+                const response = generateChatResponse(message);
+                addMessageToChat('assistant', response);
+                addChatMessage('assistant', response);
+            }, 1000 + Math.random() * 1000);
+        }
+
+        /**
+         * Add a message to the chat UI
+         * @param {string} role - 'user', 'assistant', or 'system'
+         * @param {string} content - Message content
+         */
+        function addMessageToChat(role, content) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${role}`;
+            messageDiv.textContent = content;
+            messagesContainer.appendChild(messageDiv);
+
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        /**
+         * Show typing indicator
+         */
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        /**
+         * Remove typing indicator
+         */
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        /**
+         * Load chat history from localStorage
+         */
+        function loadChatHistory() {
+            const history = getChatHistory();
+            const messagesContainer = document.getElementById('chatMessages');
+
+            if (!history || history.length === 0) {
+                // Add welcome message
+                const welcomeMsg = "Hi there! 👋 We're Sun and Moon! Ask us anything about the quiz, ourselves, or your result! ☀️🌙";
+                addMessageToChat('system', welcomeMsg);
+                addChatMessage('assistant', welcomeMsg);
+                return;
+            }
+
+            // Load existing messages
+            history.forEach(msg => {
+                addMessageToChat(msg.role, msg.content);
+            });
+        }
+
+        /**
+         * Update chat badge if there are unread messages
+         */
+        function updateChatBadge() {
+            const badge = document.getElementById('chatFabBadge');
+            const history = getChatHistory();
+
+            if (history && history.length > 1) {
+                // Show badge if there are messages but chat isn't open
+                badge.classList.add('visible');
+            }
+        }
+
+        /**
+         * Generate a contextual chat response
+         * @param {string} userMessage - The user's message
+         * @returns {string} Generated response
+         */
+        function generateChatResponse(userMessage) {
+            const msg = userMessage.toLowerCase();
+            const name = getUsername();
+            const results = getResults();
+
+            // Greetings
+            if (msg.match(/^(hi|hello|hey|howdy|greetings)/)) {
+                const nameAddition = name ? ` ${name}!` : '!';
+                return `Hi there${nameAddition} ☀️ We're so happy to chat with you! What would you like to know? 🌙`;
+            }
+
+            // Character-specific questions
+            if (msg.includes('sun')) {
+                return `Oh, you want to know about Sun? ☀️ That's me! I'm the cheerful caretaker of the daycare! I love making rules, cleaning up (well, TRYING to), and making sure everyone has a super-duper fun time! Want to play some games? 🎨`;
+            }
+
+            if (msg.includes('moon')) {
+                return `Ah, Moon 🌙 That's my... other half. Moon is calm, mysterious, and handles all the nighttime stuff. Not very chatty, but very reliable. Great at handling the... difficult situations. I couldn't do this without Moon!`;
+            }
+
+            if (msg.includes('lunar')) {
+                return `Lunar! 🌑 Oh, they're absolutely ADORABLE! So sweet and innocent, like a little moon-child. They love everyone and just wants to be loved back. We all protect Lunar with our lives! 💜`;
+            }
+
+            if (msg.includes('eclipse')) {
+                return `Eclipse... 🌗 That's complicated. We're BOTH in there, you see? Sun AND Moon, together! It's been quite a journey learning to work as one, but we're making it work. Balance, you know? ☀️🌙`;
+            }
+
+            if (msg.includes('earth')) {
+                return `Earth! 🌍 She's like... a mom to everyone. So patient and wise. She created us, in a way. When things get chaotic, Earth is the calm center. We're so grateful for her guidance!`;
+            }
+
+            if (msg.includes('solar flare')) {
+                return `Solar Flare! 🔥 Woah, don't make them angry! They're INCREDIBLY protective. Scary powerful when loved ones are threatened. But that fire comes from love. Truly fierce!`;
+            }
+
+            if (msg.includes('ruin') || msg.includes('ruin')) {
+                return `Ruin... 💀 They've been through a lot. Complicated history. But there's good in there, trying to break through. Everyone deserves a chance to change, you know?`;
+            }
+
+            if (msg.includes('foxy')) {
+                return `FOXY! 🦊 Oh, I LOVE Foxy! Such a good friend! A bit chaotic and pirate-y, but ALWAYS there when it counts. Loyal to the end! We have the BEST adventures together!`;
+            }
+
+            if (msg.includes('bloodmoon')) {
+                return `Bloodmoon... 🩸 Intense. VERY intense. Scary smart and calculates everything. Not to be underestimated. But even the most calculated ones can change...`;
+            }
+
+            if (msg.includes('puppet')) {
+                return `The Puppet... 🎭 Mysterious. Always watching, always planning. Sees everything. Helpful, but in... interesting ways. Never quite know what they're thinking. It's both impressive and unsettling!`;
+            }
+
+            if (msg.includes('old moon')) {
+                return `Old Moon... 🌘 From another dimension. Wise beyond words. Seen things that would break most people. There's a sadness there, but also profound understanding. We're still learning from them.`;
+            }
+
+            if (msg.includes('monty')) {
+                return `Montgomery Gator! 🐊 Confident, athletic, LOUD! Always trying to prove himself. Can be a bit much sometimes, but has a good heart. Competitive to the bone!`;
+            }
+
+            if (msg.includes('dj') || msg.includes('music man')) {
+                return `DJ Music Man! 🎧 The BIGGEST sweetie! So enthusiastic about music and parties. Gentle giant energy. Always brings the vibes! We love having them around!`;
+            }
+
+            if (msg.includes('jack') || msg.includes('jack-o')) {
+                return `Jack-O-Moon! 🎃 Spooky but FUN! Loves Halloween and surprises. A little creepy at first glance, but it's all in good fun. Great pranks, amazing laugh!`;
+            }
+
+            if (msg.includes('quiz') || msg.includes('result')) {
+                if (results) {
+                    const character = characters[results.character];
+                    return `Your result is ${character.name}! ${character.emoji} ${character.title}. Pretty cool, right${name ? ` ${name}` : ''}? Want to know more about why you matched with them?`;
+                }
+                return `The quiz has 20 questions that help determine which SAMS character you're most like! Each answer adds points to different characters. At the end, we show your top match! Want to try it? ☀️`;
+            }
+
+            // Result explanation
+            if (msg.includes('why') || msg.includes('explain')) {
+                if (results) {
+                    const character = characters[results.character];
+                    return `You matched with ${character.name} because your answers align with their traits: ${character.traits.slice(0, 3).join(', ')}. ${character.name} is ${character.title.toLowerCase()} - pretty cool match if you ask us! 🌟`;
+                }
+                return `Take the quiz first, then we can explain why you got your result! Each question helps us understand your personality better!`;
+            }
+
+            // Personality questions
+            if (msg.includes('personality') || msg.includes('character')) {
+                return `There are 16 different SAMS characters you could match with! Each has unique personality traits - from cheerful Sun to mysterious Moon, from innocent Lunar to complex Eclipse. Which one are YOU hoping for? 🤔`;
+            }
+
+            // Compliments
+            if (msg.includes('love') || msg.includes('amazing') || msg.includes('awesome') || msg.includes('cool')) {
+                return `Aww, thank you${name ? ` ${name}` : ''}! 🥰 You're pretty amazing too! We love chatting with our friends! Makes everything so much brighter! ☀️🌙`;
+            }
+
+            // Help
+            if (msg.includes('help') || msg.includes('what can i ask')) {
+                return `You can ask me about: 🌟 Any of the SAMS characters (Sun, Moon, Lunar, Eclipse, etc.)\n🌟 How the quiz works\n🌟 Your quiz results\n🌟 Personality questions\n🌟 Or just say hi! What would you like to know?`;
+            }
+
+            // Goodbye
+            if (msg.match(/(bye|goodbye|see you|later|g'night)/)) {
+                return `Goodbye${name ? ` ${name}` : ''}! 🌙 Come back and chat anytime! And remember - you're absolutely star-tastic! ⭐ Sweet dreams! ☀️💤`;
+            }
+
+            // Default responses
+            const defaults = [
+                `That's interesting! Tell me more! 🤔 I love learning about our friends!`,
+                `Hmm, I'm not sure I understand completely. Could you rephrase that? 🌙`,
+                `What a thought! 🌟 You know, ${name ? name : 'friend'}, every question helps us learn more about you!`,
+                `Oh! That reminds me of something... actually I forgot what I was going to say! 😅 Happens to Sun sometimes!`,
+                `You know what? 🌙 That's exactly the kind of thing someone would ask who's really thoughtful. I appreciate that!`,
+                `Fascinating! ☀️ I could talk about this all day! What else is on your mind?`
+            ];
+
+            return defaults[Math.floor(Math.random() * defaults.length)];
+        }
+
+        // Expose helper functions globally for potential external use
+        window.SAMSQuiz = {
+            saveToLocalStorage,
+            getFromLocalStorage,
+            saveUsername,
+            getUsername,
+            saveQuizState,
+            getQuizState,
+            saveResults,
+            getResults,
+            saveExplanation,
+            getExplanation,
+            addChatMessage,
+            getChatHistory,
+            clearQuizData,
+            clearAllData,
+            getAllStoredData,
+            hasSavedQuiz,
+            hasSavedResults,
+            STORAGE_KEYS
+        };
     </script>
 </body>
 </html>
