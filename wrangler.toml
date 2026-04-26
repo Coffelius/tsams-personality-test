@@ -2,16 +2,8 @@ name = "sams-personality-test"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "."
 
-# Route configuration for API endpoints
-[[routes]]
-pattern = "api/explain"
-custom_route = true
+# Workers AI binding - set in Cloudflare dashboard or via:
+# wrangler pages secret put AI_BINDING --project-name=sams-personality-test
 
-[[routes]]
-pattern = "api/chat"
-custom_route = true
-
-# Workers AI binding (add in Cloudflare dashboard)
-# [vars]
-# CLOUDFLARE_ACCOUNT_ID = "your-account-id"
-# CLOUDFLARE_API_TOKEN = "your-api-token"
+[vars]
+ENVIRONMENT = "production"
