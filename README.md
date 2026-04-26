@@ -2,6 +2,8 @@
 
 A web-based personality assessment quiz built with vanilla HTML, CSS, and JavaScript, designed for deployment on Cloudflare Pages with AI-powered explanations.
 
+**🔗 Live Demo:** [https://tsams-personality-test.pages.dev/](https://tsams-personality-test.pages.dev/)
+
 ## Features
 
 - **16 TSAMS Personality Types**: Discover which celestial-themed character matches your personality
