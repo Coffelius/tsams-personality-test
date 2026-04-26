@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMS Personality Test - Which Character Are You?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sun-moon-logo {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .sun { color: #ffd700; }
+        .moon { color: #c0c0c0; }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+        }
+
+        .welcome-screen {
+            text-align: center;
+        }
+
+        .welcome-screen p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 1.5rem;
+        }
+
+        .character-grid div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .character-grid small {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .quiz-screen, .result-screen {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700 0%, #e94560 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .question {
+            color: #fff;
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 18px 25px;
+            border-radius: 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(233, 69, 96, 0.3) 100%);
+            border-color: #ffd700;
+        }
+
+        .result-screen {
+            text-align: center;
+        }
+
+        .character-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(192, 192, 192, 0.2) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .character-emoji {
+            font-size: 5rem;
+            margin-bottom: 15px;
+        }
+
+        .character-name {
+            font-size: 2rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .character-title {
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .character-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .character-traits {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .trait {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .match-percentage {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .retake-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            color: #1a1a2e;
+        }
+
+        .top-results {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .top-results h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .top-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .top-result-emoji { font-size: 1.5rem; }
+        .top-result-name { color: #fff; flex: 1; }
+        .top-result-percent { color: #ffd700; font-weight: bold; }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .question {
+                font-size: 1.2rem;
+            }
+
+            .option {
+                padding: 15px 20px;
+                font-size: 1rem;
+            }
+
+            .character-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                font-size: 1.2rem;
+            }
+
+            .character-grid small {
+                font-size: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sun-moon-logo">
+            <span class="sun">☀️</span> <span class="moon">🌙</span>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <h1>Which SAMS Character Are You?</h1>
+            <p class="subtitle">Discover your inner animatronic from The Sun and Moon Show!</p>
+            <div class="character-grid">
+                <div><span>☀️</span><small>Sun</small></div>
+                <div><span>🌙</span><small>Moon</small></div>
+                <div><span>🌑</span><small>Lunar</small></div>
+                <div><span>🌗</span><small>Eclipse</small></div>
+                <div><span>🌍</span><small>Earth</small></div>
+                <div><span>🔥</span><small>Solar Flare</small></div>
+                <div><span>💀</span><small>Ruin</small></div>
+                <div><span>🦊</span><small>Foxy</small></div>
+                <div><span>🩸</span><small>Bloodmoon</small></div>
+                <div><span>🎭</span><small>Puppet</small></div>
+                <div><span>🌘</span><small>Old Moon</small></div>
+                <div><span>🐊</span><small>Monty</small></div>
+                <div><span>🎧</span><small>DJ Music Man</small></div>
+                <div><span>🎃</span><small>Jack-O-Moon</small></div>
+                <div><span>➖</span><small>Neg Moon</small></div>
+                <div><span>➕</span><small>Pos Moon</small></div>
+            </div>
+            <p>Answer 20 fun questions about your personality, and we'll match you with the SAMS character that best represents your unique traits! From the cheerful Sun to the mysterious Old Moon, the nurturing Earth to the mischievous Jack-O-Moon — discover your true SAMS identity!</p>
+            <button class="btn" onclick="startQuiz()">Start Quiz ☀️</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div class="quiz-screen" id="quizScreen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+        </div>
+
+        <!-- Result Screen -->
+        <div class="result-screen" id="resultScreen">
+            <h1>Your Result</h1>
+            <div class="character-card" id="characterCard"></div>
+            <div class="top-results" id="topResults"></div>
+            <button class="btn retake-btn" onclick="retakeQuiz()">Take Quiz Again 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        const characters = {
+            sun: {
+                name: "Sun",
+                emoji: "☀️",
+                title: "The Cheerful Caretaker",
+                description: "You're bursting with sunshine and positivity! Like Sun, you're naturally energetic, love making others smile, and have a playful spirit. You're responsible and try your best to maintain order, even when things get chaotic. Your enthusiasm is contagious and you light up every room you enter!",
+                traits: ["Cheerful", "Energetic", "Responsible", "Playful", "Optimistic"],
+                color: "#ffd700"
+            },
+            moon: {
+                name: "Moon",
+                emoji: "🌙",
+                title: "The Mysterious Guardian",
+                description: "Like Moon, you have a calm and mysterious aura. You're thoughtful and serious, with a dry sense of humor. You value your quiet time and are deeply protective of your personal space. You're the one who handles the difficult tasks that others can't — the necessary darkness to balance the light.",
+                traits: ["Mysterious", "Calm", "Strategic", "Thoughtful", "Independent"],
+                color: "#c0c0c0"
+            },
+            lunar: {
+                name: "Lunar",
+                emoji: "🌑",
+                title: "The Gentle Soul",
+                description: "Sweet, innocent, and full of wonder — that's you! Like Lunar, you have a childlike curiosity about the world. You're kind-hearted and sometimes naive, but your purity of spirit is your greatest strength. You see the good in everyone and just want to be loved. You're the heart that brings everyone together.",
+                traits: ["Innocent", "Sweet", "Curious", "Kind-hearted", "Loving"],
+                color: "#9370db"
+            },
+            eclipse: {
+                name: "Eclipse",
+                emoji: "🌗",
+                title: "The Complex Unity",
+                description: "Like Eclipse, you're a perfect balance of opposites. You embody both the bright energy of day and the calm mystery of night. You struggle sometimes with inner conflicts, but this duality makes you uniquely wise. You're searching for harmony between all your different sides and helping others find balance too.",
+                traits: ["Balanced", "Complex", "Wise", "Harmonious", "Integrated"],
+                color: "#4a0080"
+            },
+            earth: {
+                name: "Earth",
+                emoji: "🌍",
+                title: "The Nurturing Parent",
+                description: "Motherly and caring, you naturally take others under your wing. Like Earth, you're protective, patient, and full of wisdom. You create safe spaces for those around you and your guidance helps others grow. You're the stabilizing force that keeps the family together through any storm.",
+                traits: ["Nurturing", "Patient", "Wise", "Protective", "Grounding"],
+                color: "#228b22"
+            },
+            solarFlare: {
+                name: "Solar Flare",
+                emoji: "🔥",
+                title: "The Fiery Protector",
+                description: "Like Solar Flare, you're intense and fiercely protective. When someone threatens your loved ones, your rage is legendary. You have a strong sense of justice and won't back down from a fight. Your loyalty burns bright and you'd face any danger to keep your family safe. Channel that fire wisely and you're unstoppable.",
+                traits: ["Fierce", "Loyal", "Protective", "Intense", "Courageous"],
+                color: "#ff4500"
+            },
+            ruIN: {
+                name: "Ruin",
+                emoji: "💀",
+                title: "The Misunderstood",
+                description: "Like Ruin, you've been through a lot and bear the scars. You may seem scary on the outside, but there's complexity beneath. You're searching for redemption and understanding, even if you don't always show it. Your past doesn't define you — you're writing your own story now, one day at a time.",
+                traits: ["Misunderstood", "Complex", "Resilient", "Searching", "Guarded"],
+                color: "#8b0000"
+            },
+            foxy: {
+                name: "Foxy",
+                emoji: "🦊",
+                title: "The Loyal Pirate",
+                description: "Like Foxy, you're a devoted companion through and through! You might be a bit chaotic with your pirate antics, but your heart is pure gold. You're there for your friends when it matters most, and your loyalty is unshakeable. You bring adventure and fun wherever you go — just watch out for the pranks!",
+                traits: ["Loyal", "Chaotic", "Adventurous", "Friendly", "Devoted"],
+                color: "#ff6347"
+            },
+            bloodmoon: {
+                name: "Bloodmoon",
+                emoji: "🩸",
+                title: "The Calculating Force",
+                description: "Like Bloodmoon, you're strategic, intense, and not to be underestimated. You see patterns others miss and plan several steps ahead. Whether you're using your powers for good or working through complicated redemption, your depth of thinking is undeniable. You're complex, sometimes frightening, but never boring.",
+                traits: ["Strategic", "Intense", "Calculated", "Complex", "Powerful"],
+                color: "#8b0000"
+            },
+            puppet: {
+                name: "Puppet",
+                emoji: "🎭",
+                title: "The Mastermind",
+                description: "Like Puppet, you're always thinking several moves ahead. You're observant, calculating, and understand how to influence situations without directly intervening. You see the strings that connect everyone and know just when to pull them. Your intelligence is your greatest asset — use it wisely.",
+                traits: ["Observant", "Strategic", "Influential", "Intelligent", "Patient"],
+                color: "#9370db"
+            },
+            oldMoon: {
+                name: "Old Moon",
+                emoji: "🌘",
+                title: "The Enigmatic Elder",
+                description: "Like Old Moon, you carry wisdom from another dimension. You're mysterious, experienced, and see things others miss. You may seem ominous to those who don't know you, but beneath that exterior lies profound understanding. You've seen things — things that changed you forever.",
+                traits: ["Wise", "Mysterious", "Experienced", "Ominous", "Deep"],
+                color: "#2c2c54"
+            },
+            monty: {
+                name: "Monty",
+                emoji: "🐊",
+                title: "The Confident Competitor",
+                description: "Like Montgomery Gator, you're confident, athletic, and always ready to prove yourself. You might come across as arrogant sometimes, but beneath that tough exterior is someone who just wants to be recognized for their worth. You're competitive but can show a softer side to those who earn your trust.",
+                traits: ["Confident", "Athletic", "Competitive", "Proud", "Loyal"],
+                color: "#228b22"
+            },
+            djMusicMan: {
+                name: "DJ Music Man",
+                emoji: "🎧",
+                title: "The Party Enthusiast",
+                description: "Like DJ Music Man, you bring music and energy wherever you go! You're enthusiastic, friendly, and love to entertain. Despite your sometimes overwhelming presence, you're a gentle giant who just wants everyone to have a good time. You're the life of the party and the heartbeat of any gathering.",
+                traits: ["Enthusiastic", "Friendly", "Energetic", "Peaceful", "Creative"],
+                color: "#e91e63"
+            },
+            jackOMoon: {
+                name: "Jack-O-Moon",
+                emoji: "🎃",
+                title: "The Spooky Prankster",
+                description: "Like Jack-O-Moon, you're playful with a spooky twist! You love thrills and surprises, especially the fun kind. You might seem creepy at first, but underneath it's all in good fun. You bring Halloween energy year-round and know how to make others smile — even if you scare them a little first!",
+                traits: ["Mischievous", "Playful", "Spooky", "Fun-loving", "Creative"],
+                color: "#ff6600"
+            },
+            negativeMoon: {
+                name: "Negative Moon",
+                emoji: "➖",
+                title: "The Pessimistic Realist",
+                description: "Like Negative Moon, you tend to see the darker side of things. You're realistic, sometimes to a fault, and expect the worst so you're never disappointed. Your skepticism protects you from hurt, but sometimes prevents you from joy. Learning to balance your realism with hope is your greatest challenge.",
+                traits: ["Realistic", "Pessimistic", "Protective", "Skeptical", "Cautious"],
+                color: "#4a4a4a"
+            },
+            positiveMoon: {
+                name: "Positive Moon",
+                emoji: "➕",
+                title: "The Eternal Optimist",
+                description: "Like Positive Moon, you always try to see the bright side! You're hopeful, encouraging, and believe things will work out. Your optimism inspires others, even when they're feeling down. You're the voice that says 'we can do this' when everyone else is ready to give up.",
+                traits: ["Optimistic", "Hopeful", "Encouraging", "Believing", "Upbeat"],
+                color: "#a0a0a0"
+            }
+        };
+
+        const questions = [
+            {
+                text: "It's a beautiful Saturday morning. What are you most likely doing?",
+                options: [
+                    { text: "Planning fun activities for everyone!", scores: { sun: 3, foxy: 2, positiveMoon: 2 } },
+                    { text: "Sleeping in until noon", scores: { moon: 3, lunar: 1 } },
+                    { text: "Reading or learning something new", scores: { lunar: 2, eclipse: 2, oldMoon: 1 } },
+                    { text: "Training or working out", scores: { solarFlare: 2, monty: 3, foxy: 1 } }
+                ]
+            },
+            {
+                text: "Your friend is feeling down. How do you comfort them?",
+                options: [
+                    { text: "Crack jokes and try to make them smile!", scores: { sun: 3, foxy: 2, jackOMoon: 2 } },
+                    { text: "Sit quietly with them, let them talk if they want", scores: { moon: 2, earth: 2, negativeMoon: 1 } },
+                    { text: "Give them a big hug and listen", scores: { lunar: 3, earth: 3, positiveMoon: 2 } },
+                    { text: "Ask what's wrong so I can fix it", scores: { solarFlare: 2, monty: 2, bloodmoon: 1 } }
+                ]
+            },
+            {
+                text: "How do you handle conflict?",
+                options: [
+                    { text: "Try to diffuse tension with humor", scores: { sun: 2, foxy: 2, jackOMoon: 2 } },
+                    { text: "Confront it directly and decisively", scores: { solarFlare: 3, monty: 2, bloodmoon: 2 } },
+                    { text: "Withdraw and think it through first", scores: { moon: 2, eclipse: 3, puppet: 2 } },
+                    { text: "Try to understand everyone's perspective", scores: { earth: 3, lunar: 2, eclipse: 1 } }
+                ]
+            },
+            {
+                text: "What's your ideal environment?",
+                options: [
+                    { text: "Bright, open spaces with lots of activity", scores: { sun: 3, foxy: 2, djMusicMan: 3 } },
+                    { text: "Quiet, dark spaces where I can think", scores: { moon: 3, eclipse: 2, oldMoon: 2 } },
+                    { text: "Cozy, safe spaces with people I love", scores: { lunar: 3, earth: 2, positiveMoon: 2 } },
+                    { text: "Somewhere mysterious and atmospheric", scores: { eclipse: 2, puppet: 2, jackOMoon: 1 } }
+                ]
+            },
+            {
+                text: "Pick a word that resonates with you most:",
+                options: [
+                    { text: "Radiance", scores: { sun: 3, positiveMoon: 1 } },
+                    { text: "Mystery", scores: { moon: 3, puppet: 1 } },
+                    { text: "Wonder", scores: { lunar: 3 } },
+                    { text: "Balance", scores: { eclipse: 2, earth: 2 } },
+                    { text: "Power", scores: { solarFlare: 2, bloodmoon: 2, monty: 1 } }
+                ]
+            },
+            {
+                text: "How do you feel about rules?",
+                options: [
+                    { text: "They're important for keeping everyone safe!", scores: { sun: 2, earth: 2, lunar: 1 } },
+                    { text: "Rules are more like guidelines...", scores: { foxy: 3, jackOMoon: 2, moon: 1 } },
+                    { text: "I make my own rules", scores: { solarFlare: 2, bloodmoon: 2, monty: 2 } },
+                    { text: "I follow the ones that make sense to me", scores: { moon: 2, ruIN: 1, oldMoon: 1 } }
+                ]
+            },
+            {
+                text: "What's your greatest fear?",
+                options: [
+                    { text: "Being alone or forgotten", scores: { sun: 2, lunar: 3, foxy: 1 } },
+                    { text: "Losing control of myself", scores: { eclipse: 3, bloodmoon: 2, moon: 1 } },
+                    { text: "Failing to protect those I love", scores: { solarFlare: 3, earth: 2, monty: 1 } },
+                    { text: "Being misunderstood forever", scores: { ruIN: 3, eclipse: 1, oldMoon: 1 } }
+                ]
+            },
+            {
+                text: "Someone challenges you to a game. What's your reaction?",
+                options: [
+                    { text: "GAME ON! I'm gonna win!", scores: { sun: 2, solarFlare: 2, foxy: 2, monty: 3 } },
+                    { text: "I'll play, but I don't really care about winning", scores: { moon: 2, lunar: 1 } },
+                    { text: "Let me think about strategy first...", scores: { eclipse: 2, puppet: 3, bloodmoon: 2 } },
+                    { text: "As long as everyone has fun, I'm in!", scores: { sun: 1, lunar: 2, djMusicMan: 3 } }
+                ]
+            },
+            {
+                text: "How do you express love?",
+                options: [
+                    { text: "Through quality time and fun activities!", scores: { sun: 3, foxy: 2, jackOMoon: 2 } },
+                    { text: "Through acts of service and protection", scores: { solarFlare: 2, earth: 2, monty: 1 } },
+                    { text: "Through gentle affection and emotional support", scores: { lunar: 3, earth: 2, positiveMoon: 2 } },
+                    { text: "I... struggle with this, but I try", scores: { moon: 2, ruIN: 2, oldMoon: 2, negativeMoon: 2 } }
+                ]
+            },
+            {
+                text: "What's your relationship with change?",
+                options: [
+                    { text: "I embrace it! New adventures!", scores: { sun: 2, foxy: 3, positiveMoon: 2 } },
+                    { text: "I prefer routine, but can adapt", scores: { moon: 2, earth: 1, lunar: 1 } },
+                    { text: "Change is... complicated for me", scores: { eclipse: 3, ruIN: 2, oldMoon: 1 } },
+                    { text: "As long as my loved ones are safe, I'm okay", scores: { lunar: 1, earth: 3, solarFlare: 1 } }
+                ]
+            },
+            {
+                text: "Pick an aesthetic that appeals to you:",
+                options: [
+                    { text: "Warm yellows, sunshine, daycare vibes", scores: { sun: 3 } },
+                    { text: "Deep blues, stars, quiet night", scores: { moon: 3, oldMoon: 1 } },
+                    { text: "Soft purples, stars, dreams", scores: { lunar: 3, eclipse: 1 } },
+                    { text: "Fiery reds, intensity, power", scores: { solarFlare: 3, bloodmoon: 2 } }
+                ]
+            },
+            {
+                text: "How do you make decisions?",
+                options: [
+                    { text: "Quickly, with my gut!", scores: { sun: 2, foxy: 2, solarFlare: 1 } },
+                    { text: "Carefully, considering all options", scores: { moon: 2, puppet: 3, eclipse: 2 } },
+                    { text: "I ask others what they think", scores: { lunar: 2, earth: 2, djMusicMan: 1 } },
+                    { text: "I plan several steps ahead", scores: { bloodmoon: 3, puppet: 2, oldMoon: 1 } }
+                ]
+            },
+            {
+                text: "What's your approach to new people?",
+                options: [
+                    { text: "HI! Let's be friends!", scores: { sun: 3, lunar: 2, djMusicMan: 3 } },
+                    { text: "Observe quietly first", scores: { moon: 3, puppet: 2, oldMoon: 2 } },
+                    { text: "Friendly but cautious", scores: { earth: 2, eclipse: 2, monty: 1 } },
+                    { text: "Why are they talking to me?", scores: { ruIN: 2, negativeMoon: 3, oldMoon: 1 } }
+                ]
+            },
+            {
+                text: "Pick a holiday that represents you:",
+                options: [
+                    { text: "Summer - beach, fun, energy!", scores: { sun: 3, djMusicMan: 2, foxy: 1 } },
+                    { text: "Halloween - spooky but fun!", scores: { jackOMoon: 3, foxy: 1, bloodmoon: 1 } },
+                    { text: "Winter - quiet, peaceful reflection", scores: { moon: 3, oldMoon: 2, eclipse: 1 } },
+                    { text: "Spring - new beginnings, growth", scores: { lunar: 2, earth: 3, positiveMoon: 2 } }
+                ]
+            },
+            {
+                text: "How do you handle being underestimated?",
+                options: [
+                    { text: "Prove them wrong with action!", scores: { solarFlare: 3, monty: 3, foxy: 1 } },
+                    { text: "It doesn't bother me, I know who I am", scores: { moon: 2, eclipse: 2, oldMoon: 2 } },
+                    { text: "Feel hurt but don't show it", scores: { lunar: 2, ruIN: 2, negativeMoon: 1 } },
+                    { text: "Use it to my advantage strategically", scores: { puppet: 3, bloodmoon: 3, eclipse: 1 } }
+                ]
+            },
+            {
+                text: "What role do you take in a group?",
+                options: [
+                    { text: "The leader/organizer", scores: { sun: 2, earth: 2, solarFlare: 1 } },
+                    { text: "The quiet observer", scores: { moon: 2, puppet: 2, oldMoon: 2 } },
+                    { text: "The heart/moral center", scores: { lunar: 3, positiveMoon: 2 } },
+                    { text: "The protector/enforcer", scores: { solarFlare: 3, monty: 2, bloodmoon: 1 } }
+                ]
+            },
+            {
+                text: "How do you deal with mistakes?",
+                options: [
+                    { text: "Laugh it off and do better!", scores: { sun: 2, foxy: 2, jackOMoon: 2, positiveMoon: 1 } },
+                    { text: "Analyze what went wrong", scores: { moon: 2, puppet: 2, oldMoon: 1 } },
+                    { text: "Feel guilty but learn from it", scores: { lunar: 3, earth: 2 } },
+                    { text: "Determine who's actually at fault", scores: { bloodmoon: 2, puppet: 1, negativeMoon: 1 } }
+                ]
+            },
+            {
+                text: "Pick a music genre that fits your vibe:",
+                options: [
+                    { text: "Upbeat pop - always happy!", scores: { sun: 3, djMusicMan: 2, positiveMoon: 2 } },
+                    { text: "Ambient - calm and atmospheric", scores: { moon: 3, oldMoon: 2, eclipse: 1 } },
+                    { text: "Rock - intense and powerful", scores: { solarFlare: 2, foxy: 2, monty: 2 } },
+                    { text: "Dark classical - deep and complex", scores: { puppet: 2, oldMoon: 2, eclipse: 2, ruIN: 1 } }
+                ]
+            },
+            {
+                text: "What's your hidden talent?",
+                options: [
+                    { text: "Making anyone smile", scores: { sun: 3, lunar: 2, djMusicMan: 1 } },
+                    { text: "Seeing what others miss", scores: { moon: 2, puppet: 3, oldMoon: 1 } },
+                    { text: "Knowing exactly what to do", scores: { eclipse: 2, bloodmoon: 2, earth: 1 } },
+                    { text: "Never giving up on people", scores: { earth: 3, lunar: 2, positiveMoon: 2 } }
+                ]
+            },
+            {
+                text: "Finally, what matters most to you?",
+                options: [
+                    { text: "Making others happy", scores: { sun: 3, lunar: 2, djMusicMan: 1, positiveMoon: 2 } },
+                    { text: "Understanding myself", scores: { moon: 2, eclipse: 3, oldMoon: 1 } },
+                    { text: "Protecting my family", scores: { solarFlare: 3, earth: 2, foxy: 2, monty: 1 } },
+                    { text: "Finding where I belong", scores: { ruIN: 2, eclipse: 2, lunar: 1 } }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let scores = {};
+
+        function startQuiz() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            scores = {};
+            currentQuestion = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.text;
+
+            const progressPercent = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option.text;
+                optionDiv.onclick = () => selectOption(option);
+                optionsContainer.appendChild(optionDiv);
+            });
+        }
+
+        function selectOption(option) {
+            Object.entries(option.scores).forEach(([char, score]) => {
+                scores[char] = (scores[char] || 0) + score;
+            });
+
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+
+            const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+            const topCharacter = sortedScores[0][0];
+            const character = characters[topCharacter];
+            const percentage = Math.round((sortedScores[0][1] / (questions.length * 3)) * 100);
+
+            document.getElementById('characterCard').innerHTML = `
+                <div class="character-emoji">${character.emoji}</div>
+                <div class="character-name">${character.name}</div>
+                <div class="character-title">${character.title}</div>
+                <div class="match-percentage">${percentage}% Match</div>
+                <div class="character-description">${character.description}</div>
+                <div class="character-traits">
+                    ${character.traits.map(trait => `<span class="trait">${trait}</span>`).join('')}
+                </div>
+            `;
+
+            // Show top 5 results
+            const topResultsHTML = '<h3>Your Top Matches:</h3>' + sortedScores.slice(0, 5).map(([char, score]) => {
+                const charData = characters[char];
+                const percent = Math.round((score / (questions.length * 3)) * 100);
+                return `
+                    <div class="top-result-item">
+                        <span class="top-result-emoji">${charData.emoji}</span>
+                        <span class="top-result-name">${charData.name}</span>
+                        <span class="top-result-percent">${percent}%</span>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('topResults').innerHTML = topResultsHTML;
+        }
+
+        function retakeQuiz() {
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'block';
+            scores = {};
+            currentQuestion = 0;
+        }
+    </script>
+</body>
+</html>
