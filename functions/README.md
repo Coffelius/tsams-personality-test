@@ -1,6 +1,6 @@
 # TSAMS Personality Test - Cloudflare Workers API
 
-Two serverless API endpoints powered by Cloudflare Workers AI with Llama 3.1 8B Instruct.
+Three serverless API endpoints powered by Cloudflare Workers AI with Llama 3.1 8B Instruct.
 
 ## APIs
 
@@ -76,6 +76,51 @@ POST /api/chat
 }
 ```
 
+### 3. `/api/followup-questions` - AI-Generated Follow-up Questions
+
+Generates 10 contextual follow-up questions based on quiz results and character match. Questions are organized by topic (love, work, health, relationships, growth) and can be clicked to send to the chat.
+
+**Request:**
+```json
+POST /api/followup-questions
+{
+  "answers": ["Answer 1", "Answer 2", ...],
+  "character": "sun"
+}
+```
+
+**Response:**
+```json
+{
+  "questions": [
+    {
+      "question": "How does being Sun affect my love life?",
+      "topic": "love"
+    },
+    {
+      "question": "What career suits The Cheerful Caretaker best?",
+      "topic": "work"
+    },
+    ...
+  ],
+  "character": {
+    "key": "sun",
+    "name": "Sun",
+    "emoji": "☀️",
+    "title": "The Cheerful Caretaker",
+    "traits": ["Cheerful", "Energetic", "Responsible", "Playful", "Optimistic"]
+  },
+  "aiPowered": true
+}
+```
+
+**Topics:**
+- `love` — 💕 Love & Relationships (dating, expressing love, ideal partners)
+- `work` — 💼 Work & Goals (career paths, workplace conflict, leadership)
+- `health` — 🌿 Health & Wellbeing (stress management, self-care, balance)
+- `relationships` — 👥 Friendships (making friends, social style, forgiveness)
+- `growth` — 🌱 Personal Growth (strengths, confidence, potential, improvement)
+
 ## Setup
 
 ### 1. Cloudflare Configuration
@@ -119,10 +164,13 @@ wrangler pages deploy .
 | Free tier daily | 10,000 neurons |
 | ~1 explanation | ~1,500-2,500 neurons |
 | ~1 chat message | ~3,000-5,000 neurons |
+| ~1 follow-up questions set | ~2,000-3,000 neurons |
 
 **Estimated daily capacity on free tier:**
 - 4-6 explanations
 - 2-3 chat conversations
+- 3-4 follow-up question sets
+- Or combination of all three
 - Or combination of both
 
 ## Cost Optimization

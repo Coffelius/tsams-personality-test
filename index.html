@@ -396,6 +396,104 @@
             transform: translateY(0);
         }
 
+        /* Follow-up Questions Tags */
+        .followup-questions-section {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .followup-questions-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .followup-questions-title {
+            color: #6366f1;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .followup-questions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question-tag {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            padding: 10px 18px;
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: tagFadeIn 0.4s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes tagFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-tag:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.35) 0%, rgba(139, 92, 246, 0.35) 100%);
+            border-color: rgba(99, 102, 241, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .question-tag:active {
+            transform: translateY(0);
+        }
+
+        .question-tag .tag-icon {
+            font-size: 1rem;
+        }
+
+        .question-tag.loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Topic-based tag colors */
+        .question-tag[data-topic="love"] {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(244, 114, 182, 0.2) 100%);
+            border-color: rgba(236, 72, 153, 0.4);
+        }
+
+        .question-tag[data-topic="work"] {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(74, 222, 128, 0.2) 100%);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .question-tag[data-topic="health"] {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.2) 0%, rgba(253, 186, 116, 0.2) 100%);
+            border-color: rgba(251, 146, 60, 0.4);
+        }
+
+        .question-tag[data-topic="relationships"] {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(192, 132, 252, 0.2) 100%);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .question-tag[data-topic="growth"] {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(96, 165, 250, 0.2) 100%);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
         /* Action Buttons Container */
         .action-buttons {
             display: flex;
@@ -866,6 +964,11 @@
             .action-btn {
                 width: 100%;
             }
+
+            .question-tag {
+                font-size: 0.85rem;
+                padding: 8px 14px;
+            }
         }
     </style>
 </head>
@@ -956,6 +1059,17 @@
                 </div>
                 <div class="ai-explanation-content" id="aiExplanationContent">
                     <div class="ai-loading-spinner"></div>
+                </div>
+            </div>
+
+            <!-- Follow-up Questions Section -->
+            <div class="followup-questions-section" id="followupQuestionsSection" style="display: none;">
+                <div class="followup-questions-header">
+                    <span>💬</span>
+                    <span class="followup-questions-title">Ask Luna About...</span>
+                </div>
+                <div class="followup-questions-container" id="followupQuestionsContainer">
+                    <!-- Questions will be dynamically loaded here -->
                 </div>
             </div>
 
@@ -1581,6 +1695,9 @@
                 if (savedExplanation) {
                     displayExplanation(savedExplanation);
                 }
+
+                // Load follow-up questions for the saved result
+                loadFollowupQuestions(savedResults.character);
             }
         }
 
@@ -1671,6 +1788,9 @@
 
             // Generate AI explanation
             generateAIExplanation(topCharacter, percentage);
+
+            // Load follow-up questions
+            loadFollowupQuestions(topCharacter);
 
             document.getElementById('characterCard').innerHTML = `
                 <div class="character-emoji">${character.emoji}</div>
@@ -1936,6 +2056,185 @@
             requestAnimationFrame(() => {
                 textDiv.classList.add('visible');
             });
+        }
+
+        // ============================================
+        // FOLLOW-UP QUESTIONS
+        // ============================================
+
+        // Topic icons mapping
+        const TOPIC_ICONS = {
+            love: '💕',
+            work: '💼',
+            health: '🌿',
+            relationships: '👥',
+            growth: '🌱'
+        };
+
+        /**
+         * Fetch and display follow-up questions
+         * @param {string} characterKey - The matched character key
+         */
+        async function loadFollowupQuestions(characterKey) {
+            const section = document.getElementById('followupQuestionsSection');
+            const container = document.getElementById('followupQuestionsContainer');
+
+            // Show loading state
+            section.style.display = 'block';
+            container.innerHTML = '<div class="question-tag loading">Loading questions...</div>';
+
+            // Prepare answers data
+            const answersData = answers.map(a => a.selectedOption || a);
+
+            try {
+                // Call follow-up questions API
+                const response = await fetch('/followup-questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        character: characterKey,
+                        answers: answersData
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayFollowupQuestions(data.questions);
+                } else {
+                    // Fall back to local generation
+                    console.warn('API error, using local question generation');
+                    displayFollowupQuestions(generateLocalFollowupQuestions(characterKey));
+                }
+            } catch (error) {
+                // Fall back to local generation on network error
+                console.warn('Network error, using local question generation:', error);
+                displayFollowupQuestions(generateLocalFollowupQuestions(characterKey));
+            }
+        }
+
+        /**
+         * Display follow-up question tags with staggered animation
+         * @param {Array} questions - Array of question objects with {question, topic}
+         */
+        function displayFollowupQuestions(questions) {
+            const container = document.getElementById('followupQuestionsContainer');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const tag = document.createElement('button');
+                tag.className = 'question-tag';
+                tag.setAttribute('data-topic', q.topic || 'growth');
+                tag.style.animationDelay = `${index * 0.08}s`;
+                tag.innerHTML = `
+                    <span class="tag-icon">${TOPIC_ICONS[q.topic] || '💬'}</span>
+                    <span>${q.question}</span>
+                `;
+
+                // Add click handler to open chat and send question
+                tag.onclick = () => askFollowupQuestion(q.question);
+
+                container.appendChild(tag);
+            });
+        }
+
+        /**
+         * Open chat and send a follow-up question
+         * @param {string} question - The question to ask
+         */
+        function askFollowupQuestion(question) {
+            // Open chat if closed
+            if (!isChatOpen) {
+                toggleChat();
+            }
+
+            // Clear any input and set the question
+            const input = document.getElementById('chatInput');
+            input.value = question;
+
+            // Send the message
+            sendChatMessage();
+        }
+
+        /**
+         * Generate fallback follow-up questions locally (no AI required)
+         * @param {string} characterKey - The character key
+         * @returns {Array} Array of question objects
+         */
+        function generateLocalFollowupQuestions(characterKey) {
+            const character = characters[characterKey];
+            const name = character.name;
+            const title = character.title;
+
+            // Topic-based question templates
+            const loveQuestions = [
+                `How does being ${name} affect my love life?`,
+                `What's ${name}'s approach to dating?`,
+                `How do I express love as ${title}?`,
+                `Who's ${name}'s ideal partner?`
+            ];
+
+            const workQuestions = [
+                `What career suits ${title} best?`,
+                `How does ${name} handle workplace conflict?`,
+                `What's ${name}'s biggest professional strength?`,
+                `Can ${name} be a good leader?`
+            ];
+
+            const healthQuestions = [
+                `How does ${name} manage stress?`,
+                `What's ${name}'s self-care routine?`,
+                `How do I stay balanced as ${title}?`,
+                `What drains ${name}'s energy?`
+            ];
+
+            const relationshipQuestions = [
+                `Who are ${name}'s best friend matches?`,
+                `How does ${name} make new friends?`,
+                `What's ${name}'s social style?`,
+                `Can ${name} forgive easily?`
+            ];
+
+            const growthQuestions = [
+                `What's ${name}'s biggest growth area?`,
+                `How can ${name} become more confident?`,
+                `What's ${name}'s hidden potential?`,
+                `How does ${name} handle criticism?`
+            ];
+
+            // Randomly select from each category
+            const selectRandom = (arr, count = 2) => {
+                const shuffled = [...arr].sort(() => Math.random() - 0.5);
+                return shuffled.slice(0, count);
+            };
+
+            const selected = [
+                ...selectRandom(loveQuestions, 2).map(q => ({ question: q, topic: 'love' })),
+                ...selectRandom(workQuestions, 2).map(q => ({ question: q, topic: 'work' })),
+                ...selectRandom(healthQuestions, 2).map(q => ({ question: q, topic: 'health' })),
+                ...selectRandom(relationshipQuestions, 2).map(q => ({ question: q, topic: 'relationships' })),
+                ...selectRandom(growthQuestions, 2).map(q => ({ question: q, topic: 'growth' }))
+            ];
+
+            // Shuffle final selection
+            return selected.sort(() => Math.random() - 0.5);
+        }
+
+        /**
+         * Save follow-up questions to localStorage for persistence
+         * @param {Array} questions - Questions to save
+         */
+        function saveFollowupQuestions(questions) {
+            saveToLocalStorage('tsams_followup_questions', questions);
+        }
+
+        /**
+         * Get saved follow-up questions
+         * @returns {Array|null} Saved questions or null
+         */
+        function getFollowupQuestions() {
+            return getFromLocalStorage('tsams_followup_questions');
         }
 
         // ============================================
