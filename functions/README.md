@@ -170,22 +170,22 @@ All 16 TSAMS characters with their archetypes:
 
 | Character | Title | Emoji |
 |-----------|-------|-------|
-| Sun | Radiant Optimist | ☀️ |
-| Moon | Intuitive Observer | 🌙 |
-| Lunar | Gentle Heart | 🌖 |
-| Eclipse | Mystical Strategist | 🌑 |
-| Solar Flare | Fierce Protector | 🔥 |
-| Foxy | Clever Charmer | 🦊 |
-| Earth | Steadfast Guardian | 🌍 |
-| Puppet | Complex Enigma | 🎭 |
-| Monty | Loyal Brother | 🐊 |
-| Bloodmoon | Intense Defender | 🩸 |
-| DJ Music Man | Creative Spirit | 🎵 |
-| Jack O' Moon | Playful Trickster | 🎃 |
-| Old Moon | Wise Elder | 🌗 |
-| RuIN | Hidden Potential | ⚡ |
-| Positive Moon | Beacon of Hope | ✨ |
-| Negative Moon | Critical Thinker | 💫 |
+| Sun | Cheerful Caretaker | ☀️ |
+| Moon | Mysterious Guardian | 🌙 |
+| Lunar | Gentle Soul | 🌑 |
+| Eclipse | Complex Unity | 🌗 |
+| Solar Flare | Fiery Protector | 🔥 |
+| Foxy | Loyal Pirate | 🦊 |
+| Earth | Nurturing Parent | 🌍 |
+| Puppet | Mastermind | 🎭 |
+| Monty | Confident Competitor | 🐊 |
+| Bloodmoon | Calculating Force | 🩸 |
+| DJ Music Man | Party Enthusiast | 🎵 |
+| Jack O' Moon | Spooky Prankster | 🎃 |
+| Old Moon | Enigmatic Elder | 🌘 |
+| RuIN | Misunderstood | 💀 |
+| Positive Moon | Eternal Optimist | ✨ |
+| Negative Moon | Pessimistic Realist | ➖ |
 
 ## Error Handling
 
