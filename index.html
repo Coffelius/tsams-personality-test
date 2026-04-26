@@ -113,6 +113,16 @@
             border-radius: 10px;
             margin-bottom: 30px;
             overflow: hidden;
+            position: relative;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .progress-fill {
@@ -925,6 +935,7 @@
         <div class="quiz-screen" id="quizScreen">
             <div id="quizGreeting" class="quiz-greeting" style="display: none;"></div>
             <div class="progress-bar">
+                <div class="progress-text" id="progressText">Question 1 of 16</div>
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             <div class="question" id="question"></div>
@@ -1602,6 +1613,7 @@
 
             const progressPercent = ((currentQuestion) / questions.length) * 100;
             document.getElementById('progressFill').style.width = progressPercent + '%';
+            document.getElementById('progressText').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
 
             const optionsContainer = document.getElementById('options');
             optionsContainer.innerHTML = '';
