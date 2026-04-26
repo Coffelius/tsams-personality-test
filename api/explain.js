@@ -1,14 +1,11 @@
 /**
- * Cloudflare Worker API: /api/explain
+ * Cloudflare Pages Function: /api/explain
  * Generates AI-powered personality explanations using Workers AI (Llama 3.1 8B)
  *
- * Pricing: 25,608 neurons/M input, 75,147 neurons/M output
- * Free tier: 10K neurons/day
- *
- * Cost optimization: Character descriptions are cached in prompt cache
+ * Uses built-in AI binding - no API tokens needed
  */
 
-// Character descriptions with detailed psychological profiles (cached)
+// Character descriptions with detailed psychological profiles
 const CHARACTER_PROFILES = {
   sun: {
     name: "Sun",
@@ -110,7 +107,6 @@ const CHARACTER_PROFILES = {
 
 /**
  * Pre-built character prompts for cache optimization
- * These static descriptions benefit from Cloudflare's prompt caching
  */
 function getCachedCharacterPrompt(character) {
   const profile = CHARACTER_PROFILES[character];
@@ -124,8 +120,7 @@ This is a SAMS (Sun and Moon System) personality type based on the celestial-the
 }
 
 /**
- * Generate AI explanation using Workers AI
- * Uses @cf/meta/llama-3.1-8b-instruct model
+ * Generate AI explanation using Workers AI runtime
  */
 async function generateExplanation(answers, character, env) {
   const characterProfile = CHARACTER_PROFILES[character];
@@ -133,14 +128,13 @@ async function generateExplanation(answers, character, env) {
     throw new Error(`Unknown character: ${character}`);
   }
 
-  // Build prompt with cache-optimized character profile
   const cachedPrompt = getCachedCharacterPrompt(character);
 
   const userPrompt = `
 Based on the following quiz answers, explain why this person matched with ${characterProfile.name} (${characterProfile.title}).
 
 Their answers reflect these personality patterns:
-${answers.map((a, i) => `${i + 1}. ${a}`).join('\n')}
+${answers.map((a, i) => `${i + 1}. ${a.selectedOption || a}`).join('\n')}
 
 Provide a warm, insightful explanation (2-3 sentences) that:
 1. Validates their personality traits
@@ -151,42 +145,31 @@ Provide a warm, insightful explanation (2-3 sentences) that:
 Keep it concise and conversational.`;
 
   try {
-    const response = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai/run/@cf/meta/llama-3.1-8b-instruct`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${env.CLOUDFLARE_API_TOKEN}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: 'system',
-              content: `You are a warm, insightful personality guide for the SAMS personality test. You provide thoughtful, encouraging explanations that help people understand themselves better. ${cachedPrompt}`
-            },
-            {
-              role: 'user',
-              content: userPrompt
-            }
-          ],
-          max_tokens: 300,
-            // Short responses for cost efficiency (75,147 neurons/M output)
-          temperature: 0.8
-        })
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`Workers AI request failed: ${error}`);
+    // Check if AI binding is available
+    if (!env.AI) {
+      console.log('AI binding not available, using fallback');
+      return generateFallbackExplanation(characterProfile);
     }
 
-    const data = await response.json();
-    return data.result?.response || 'Your personality shines brightly! You embody qualities that make you truly unique.';
+    // Use Workers AI runtime directly
+    const response = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+      messages: [
+        {
+          role: 'system',
+          content: `You are a warm, insightful personality guide for the SAMS personality test. You provide thoughtful, encouraging explanations that help people understand themselves better. ${cachedPrompt}`
+        },
+        {
+          role: 'user',
+          content: userPrompt
+        }
+      ],
+      max_tokens: 300,
+      temperature: 0.8
+    });
+
+    return response?.response || generateFallbackExplanation(characterProfile);
   } catch (error) {
     console.error('AI generation error:', error);
-    // Fallback to template-based explanation
     return generateFallbackExplanation(characterProfile);
   }
 }
@@ -205,138 +188,98 @@ function generateFallbackExplanation(profile) {
 }
 
 /**
- * Calculate neuron usage for monitoring
+ * Main export for Cloudflare Pages Functions
  */
-function calculateNeuronCost(inputTokens, outputTokens) {
-  const inputCost = (inputTokens / 1_000_000) * 25_608;
-  const outputCost = (outputTokens / 1_000_000) * 75_147;
-  return {
-    input: Math.round(inputCost),
-    output: Math.round(outputCost),
-    total: Math.round(inputCost + outputCost)
+export async function onRequest(context) {
+  const { request, env } = context;
+
+  // Handle CORS
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
   };
-}
 
-/**
- * Main export for Cloudflare Workers
- */
-export default {
-  async fetch(request, env, ctx) {
-    // Handle CORS
-    const corsHeaders = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    };
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
 
-    if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: corsHeaders });
-    }
+  try {
+    const url = new URL(request.url);
 
-    try {
-      const url = new URL(request.url);
-
-      // GET request handler
-      if (request.method === 'GET') {
-        return new Response(
-          JSON.stringify({
-            service: 'SAMS Personality Explanation API',
-            version: '1.0.0',
-            endpoints: {
-              explain: 'POST / - Generate AI explanation for personality result',
-              health: 'GET /health - Check service status'
-            },
-            characters: Object.keys(CHARACTER_PROFILES),
-            pricing: {
-              model: '@cf/meta/llama-3.1-8b-instruct',
-              neuronsPerMillionInput: 25608,
-              neuronsPerMillionOutput: 75147,
-              freeTierDaily: 10000
-            }
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      // Health check
-      if (url.pathname === '/health') {
-        return new Response(
-          JSON.stringify({
-            status: 'healthy',
-            timestamp: new Date().toISOString(),
-            characters: Object.keys(CHARACTER_PROFILES).length
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      // POST request for explanation generation
-      if (request.method === 'POST') {
-        const body = await request.json();
-        const { answers, character } = body;
-
-        // Validation
-        if (!character || !CHARACTER_PROFILES[character]) {
-          return new Response(
-            JSON.stringify({
-              error: 'Invalid character',
-              validCharacters: Object.keys(CHARACTER_PROFILES)
-            }),
-            {
-              status: 400,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-            }
-          );
-        }
-
-        if (!answers || !Array.isArray(answers)) {
-          return new Response(
-            JSON.stringify({ error: 'Invalid answers array' }),
-            {
-              status: 400,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-            }
-          );
-        }
-
-        // Generate explanation
-        const explanation = await generateExplanation(answers, character, env);
-
-        // Estimate neuron usage (rough estimate based on prompt + response length)
-        const estimatedInputTokens = (getCachedCharacterPrompt(character).length + answers.join(' ').length) / 4;
-        const estimatedOutputTokens = explanation.length / 4;
-        const neuronUsage = calculateNeuronCost(estimatedInputTokens, estimatedOutputTokens);
-
-        return new Response(
-          JSON.stringify({
-            explanation,
-            character: CHARACTER_PROFILES[character],
-            neuronUsage,
-            remainingFreeTier: Math.max(0, 10000 - neuronUsage.total)
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      return new Response(
-        JSON.stringify({ error: 'Method not allowed' }),
-        {
-          status: 405,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-
-    } catch (error) {
+    // GET request handler
+    if (request.method === 'GET') {
       return new Response(
         JSON.stringify({
-          error: 'Internal server error',
-          message: error.message
+          service: 'SAMS Personality Explanation API',
+          version: '1.0.0',
+          aiAvailable: !!env.AI,
+          characters: Object.keys(CHARACTER_PROFILES)
         }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    // POST request for explanation generation
+    if (request.method === 'POST') {
+      const body = await request.json();
+      const { answers, character } = body;
+
+      // Validation
+      if (!character || !CHARACTER_PROFILES[character]) {
+        return new Response(
+          JSON.stringify({
+            error: 'Invalid character',
+            validCharacters: Object.keys(CHARACTER_PROFILES)
+          }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      if (!answers || !Array.isArray(answers)) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid answers array' }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      // Generate explanation
+      const explanation = await generateExplanation(answers, character, env);
+
+      return new Response(
+        JSON.stringify({
+          explanation,
+          character: CHARACTER_PROFILES[character],
+          aiPowered: !!env.AI
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({ error: 'Method not allowed' }),
+      {
+        status: 405,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
+
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        error: 'Internal server error',
+        message: error.message
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
   }
-};
+}

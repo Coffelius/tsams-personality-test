@@ -2,8 +2,12 @@ name = "sams-personality-test"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "."
 
-# Workers AI binding - set in Cloudflare dashboard or via:
-# wrangler pages secret put AI_BINDING --project-name=sams-personality-test
+# Workers AI binding
+# To enable: Go to Cloudflare Dashboard > Pages > sams-personality-test > Settings > Functions > Bindings
+# Add binding named "AI" with type "Workers AI"
+
+[ai]
+binding = "AI"
 
 [vars]
 ENVIRONMENT = "production"
